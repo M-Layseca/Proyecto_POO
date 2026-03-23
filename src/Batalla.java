@@ -26,7 +26,7 @@ public class Batalla extends Salas {
             mostrarEstadoGeneral(jugador);
 
             // --- TURNO DEL JUGADOR ---
-            System.out.println("\n[1] Atacar | [2] Pasiva | [3] Estus");
+            System.out.println("\n[1] Atacar | [2] Pasiva | [3] Estus | [4] Magia");
             System.out.print("Acción: ");
             int accion = sc.nextInt();
 
@@ -57,6 +57,41 @@ public class Batalla extends Salas {
                     break;
                 case 3:
                     jugador.usarEstus();
+                    break;
+                case 4:
+                    if (jugador instanceof MAGO mago) {
+                        System.out.println("\n--- TUS HECHIZOS (Magia: " + mago.usosMagia + ") ---");
+                        for (int i = 0; i < mago.getLibroDeHechizos().size(); i++) {
+                            Hechizos h = mago.getLibroDeHechizos().get(i);
+                            System.out.println((i + 1) + ". " + h.getNombreHechizo() + " (Coste: " + h.getCosteMana() + ")");
+                        }
+
+                        System.out.print("Elige un hechizo (0 para cancelar): ");
+                        int selH = sc.nextInt() - 1;
+
+                        if (selH >= 0 && selH < mago.getLibroDeHechizos().size()) {
+                            Hechizos hechizoElegido = mago.getLibroDeHechizos().get(selH);
+
+                            if (mago.usosMagia >= hechizoElegido.getCosteMana()) {
+                                // Seleccionar objetivo (puedes reutilizar tu lógica de ataque)
+                                System.out.println("¿A quién quieres lanzar " + hechizoElegido.getNombreHechizo() + "?");
+                                for (int i = 0; i < enemigos.size(); i++) {
+                                    System.out.println((i+1) + ". " + enemigos.get(i).nombre);
+                                }
+                                int t = sc.nextInt() - 1;
+
+                                if (t >= 0 && t < enemigos.size()) {
+                                    hechizoElegido.aplicarEfecto(enemigos.get(t));
+                                    mago.usosMagia -= hechizoElegido.getCosteMana();
+                                    if (!enemigos.get(t).estaVivo()) enemigos.remove(t);
+                                }
+                            } else {
+                                System.out.println("¡No tienes suficiente maná!");
+                            }
+                        }
+                    } else {
+                        System.out.println("Tu clase no puede usar magia...");
+                    }
                     break;
             }
 

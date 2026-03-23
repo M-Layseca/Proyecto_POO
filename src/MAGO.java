@@ -1,24 +1,20 @@
-public class MAGO extends Jugador {
-    int usosMagia;
-    int maxUsos;
 
-    public MAGO(String nombre) {
-        super(nombre, 70, 20, 2,2);
-        this.usosMagia = 10;
-        this.maxUsos = 10;
-    }
+public interface Hechizos { // Debe ser 'interface'
+    String getNombreHechizo();
+    int getCosteMana();
+    void aplicarEfecto(Entidad objetivo); // Usamos Entidad como tipo
+}
+
+class BoladeFuego implements Hechizos {
+    @Override
+    public String getNombreHechizo() { return "Bola de Fuego"; }
 
     @Override
-    public void activarPasiva() {
-        if (usosPasiva > 0) {
-            this.usosMagia += 5;
-            if (this.usosMagia > maxUsos) {
-                this.usosMagia = maxUsos;
-            }
-            this.usosPasiva--;
-            System.out.println("¡Meditación! Magia actual: " + usosMagia);
-        } else {
-            System.out.println("Tu mente está agotada para meditar...");
-        }
+    public int getCosteMana() { return 3; }
+
+    @Override
+    public void aplicarEfecto(Entidad objetivo) {
+        System.out.println("¡Una explosión de fuego alcanza a " + objetivo.nombre + "!");
+        objetivo.recibirDanio(25); // Usamos el método de Entidad
     }
 }
