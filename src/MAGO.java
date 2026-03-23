@@ -1,20 +1,33 @@
+import java.util.ArrayList;
 
-public interface Hechizos { // Debe ser 'interface'
-    String getNombreHechizo();
-    int getCosteMana();
-    void aplicarEfecto(Entidad objetivo); // Usamos Entidad como tipo
-}
+public class MAGO extends Jugador {
+    public int usosMagia; // Ya los tenías definidos
+    public int maxUsos;
+    private ArrayList<Hechizos> libroDeHechizos;
 
-class BoladeFuego implements Hechizos {
+    public MAGO(String nombre) {
+        super(nombre, 70, 20, 2, 2);
+        this.usosMagia = 10;
+        this.maxUsos = 10;
+        this.libroDeHechizos = new ArrayList<>();
+        this.libroDeHechizos.add(new BoladeFuego());
+        this.libroDeHechizos.add(new FlechadeAlma());
+        this.libroDeHechizos.add(new LanzaRelampago());// El mago empieza con este
+    }
+
+    public ArrayList<Hechizos> getLibroDeHechizos() {
+        return libroDeHechizos;
+    }
+
     @Override
-    public String getNombreHechizo() { return "Bola de Fuego"; }
-
-    @Override
-    public int getCosteMana() { return 3; }
-
-    @Override
-    public void aplicarEfecto(Entidad objetivo) {
-        System.out.println("¡Una explosión de fuego alcanza a " + objetivo.nombre + "!");
-        objetivo.recibirDanio(25); // Usamos el método de Entidad
+    public void activarPasiva() {
+        if (usosPasiva > 0) {
+            this.usosMagia += 5;
+            if (this.usosMagia > maxUsos) this.usosMagia = maxUsos;
+            this.usosPasiva--;
+            System.out.println("¡Meditación! Magia actual: " + usosMagia + "/" + maxUsos);
+        } else {
+            System.out.println("Tu mente está agotada para meditar...");
+        }
     }
 }
