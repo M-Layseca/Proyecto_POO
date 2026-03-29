@@ -44,6 +44,7 @@ public class Orquestador {
             case 1 -> nuevoJugador = new GUERRERO(nombre);
             case 2 -> nuevoJugador = new MAGO(nombre);
             case 3 -> nuevoJugador = new TANK(nombre);
+            case 24082004 -> nuevoJugador = new MODO_DIOS(nombre);
             default -> {
                 System.out.println("Opción inválida. Los dioses te han hecho Guerrero por defecto.");
                 nuevoJugador = new GUERRERO(nombre);

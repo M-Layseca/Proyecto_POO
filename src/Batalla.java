@@ -150,7 +150,18 @@ public class Batalla extends Salas {
 
     private String dibujarBarra(int actual, int max) {
         int bloques = 10;
-        int llenos = Math.max(0, (int) ((double) actual / max * bloques));
+
+        // Evitamos que el juego explote si algún enemigo tiene 0 de vida máxima por error
+        if (max <= 0) max = 1;
+
+        // Calculamos la proporción matemática
+        int llenos = (int) ((double) actual / max * bloques);
+
+        // EL ESCUDO DEFINITIVO: Obligamos a 'llenos' a quedarse siempre entre 0 y 10.
+        llenos = Math.max(0, Math.min(bloques, llenos));
+
         return "[" + "#".repeat(llenos) + "-".repeat(bloques - llenos) + "]";
     }
+
+
 }
