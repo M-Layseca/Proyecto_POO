@@ -1,6 +1,6 @@
 public class Boss extends Enemigo {
     public Boss() {
-        super("El Gran Molinillo El terrible", 500, 35, 5, 1 );
+        super("El Gran Molinillo El terrible", 500, 35, 5, 0, 250 );
     }
 
     @Override

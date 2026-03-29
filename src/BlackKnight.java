@@ -1,7 +1,7 @@
 public class BlackKnight extends Enemigo {
     int critico;
     public BlackKnight() {
-        super("The Black Knight", 150, 25, 12, 1);
+        super("The Black Knight", 150, 25, 12, 0, 80);
         this.critico = 20;
     }
 

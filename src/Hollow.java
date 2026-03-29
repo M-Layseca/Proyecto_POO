@@ -1,6 +1,6 @@
 public class Hollow extends Enemigo {
     public Hollow() {
-        super("Hollow", 30, 8, 2, 1);
+        super("Hollow", 30, 8, 2, 0, 20);
     }
 
     @Override

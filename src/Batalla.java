@@ -22,120 +22,135 @@ public class Batalla extends Salas {
         Scanner sc = new Scanner(System.in);
 
         while (jugador.estaVivo() && !enemigos.isEmpty()) {
-            // --- MOSTRAR ESTADO DE TODOS ---
             mostrarEstadoGeneral(jugador);
 
-            // --- TURNO DEL JUGADOR ---
-            System.out.println("\n[1] Atacar | [2] Pasiva | [3] Estus | [4] Magia");
-            System.out.print("Acción: ");
-            int accion = sc.nextInt();
+            // 1. TURNO DEL JUGADOR
+            ejecutarTurnoJugador(jugador, sc);
 
-            switch (accion) {
-                case 1:
-                    // SELECCIÓN DE OBJETIVO
-                    System.out.println("\n¿A quién quieres atacar?");
-                    for (int i = 0; i < enemigos.size(); i++) {
-                        System.out.println((i + 1) + ". " + enemigos.get(i).nombre + " " + (i + 1));
-                    }
-                    System.out.print("Elige un número: ");
-                    int targetIndex = sc.nextInt() - 1;
-
-                    if (targetIndex >= 0 && targetIndex < enemigos.size()) {
-                        Enemigo objetivo = enemigos.get(targetIndex);
-                        System.out.println("\n¡Lanzas un golpe contra " + objetivo.nombre + " " + (targetIndex + 1) + "!");
-                        objetivo.recibirDanio(jugador.ataque);
-
-                        if (!objetivo.estaVivo()) {
-                            enemigos.remove(targetIndex);
-                        }
-                    } else {
-                        System.out.println("Te confundes y golpeas al aire...");
-                    }
-                    break;
-                case 2:
-                    jugador.activarPasiva();
-                    break;
-                case 3:
-                    jugador.usarEstus();
-                    break;
-                case 4:
-                    if (jugador instanceof MAGO mago) {
-                        System.out.println("\n--- TUS HECHIZOS (Magia: " + mago.usosMagia + ") ---");
-                        for (int i = 0; i < mago.getLibroDeHechizos().size(); i++) {
-                            Hechizos h = mago.getLibroDeHechizos().get(i);
-                            System.out.println((i + 1) + ". " + h.getNombreHechizo() + " (Coste: " + h.getCosteMana() + ")");
-                        }
-
-                        System.out.print("Elige un hechizo (0 para cancelar): ");
-                        int selH = sc.nextInt() - 1;
-
-                        if (selH >= 0 && selH < mago.getLibroDeHechizos().size()) {
-                            Hechizos hechizoElegido = mago.getLibroDeHechizos().get(selH);
-
-                            if (mago.usosMagia >= hechizoElegido.getCosteMana()) {
-                                // Seleccionar objetivo (puedes reutilizar tu lógica de ataque)
-                                System.out.println("¿A quién quieres lanzar " + hechizoElegido.getNombreHechizo() + "?");
-                                for (int i = 0; i < enemigos.size(); i++) {
-                                    System.out.println((i+1) + ". " + enemigos.get(i).nombre);
-                                }
-                                int t = sc.nextInt() - 1;
-
-                                if (t >= 0 && t < enemigos.size()) {
-                                    hechizoElegido.aplicarEfecto(enemigos.get(t));
-                                    mago.usosMagia -= hechizoElegido.getCosteMana();
-                                    if (!enemigos.get(t).estaVivo()) enemigos.remove(t);
-                                }
-                            } else {
-                                System.out.println("¡No tienes suficiente maná!");
-                            }
-                        }
-                    } else {
-                        System.out.println("Tu clase no puede usar magia...");
-                    }
-                    break;
+            // 2. TURNO DE LOS ENEMIGOS (Solo si el jugador sigue vivo y quedan enemigos)
+            if (jugador.estaVivo() && !enemigos.isEmpty()) {
+                ejecutarTurnoEnemigos(jugador);
             }
+        }
 
-            // --- TURNO DE LOS ENEMIGOS ---
-            if (!enemigos.isEmpty() && jugador.estaVivo()) {
-                System.out.println("\n--- LOS ENEMIGOS CONTRATACAN ---");
-                for (int i = 0; i < enemigos.size(); i++) {
-                    if (jugador.estaVivo()) {
-                        System.out.print("[" + enemigos.get(i).nombre + " " + (i + 1) + "]: ");
-                        enemigos.get(i).atacar(jugador);
-                    }
+        anunciarResultado(jugador);
+    }
+
+    private void ejecutarTurnoJugador(Jugador jugador, Scanner sc) {
+        System.out.println("\n[1] Atacar | [2] Pasiva | [3] Estus | [4] Magia");
+        System.out.print("Acción: ");
+        int accion = sc.nextInt();
+        sc.nextLine(); // Limpieza de buffer para Windows 11
+
+        switch (accion) {
+            case 1 -> realizarAtaqueFisico(jugador, sc);
+            case 2 -> jugador.activarPasiva();
+            case 3 -> jugador.usarEstus();
+            case 4 -> procesarMagia(jugador, sc);
+            default -> System.out.println("Te bloqueas por el miedo y pierdes el turno...");
+        }
+    }
+
+    private void realizarAtaqueFisico(Jugador jugador, Scanner sc) {
+        int t = elegirObjetivo(sc);
+        if (validarIndice(t)) {
+            Enemigo objetivo = enemigos.get(t);
+            System.out.println("\n¡Atacas a " + objetivo.nombre + "!");
+            objetivo.recibirDanio(jugador.ataque);
+            verificarMuerteEnemigo(t, jugador);
+        }
+    }
+
+    private void procesarMagia(Jugador jugador, Scanner sc) {
+        if (!(jugador instanceof MAGO mago)) {
+            System.out.println("No tienes conocimientos arcano para usar magia.");
+            return;
+        }
+
+        System.out.println("\n--- HECHIZOS (Maná: " + mago.usosMagia + ") ---");
+        for (int i = 0; i < mago.getLibroDeHechizos().size(); i++) {
+            Hechizos h = mago.getLibroDeHechizos().get(i);
+            System.out.println((i + 1) + ". " + h.getNombreHechizo() + " (Coste: " + h.getCosteMana() + ")");
+        }
+
+        System.out.print("Elige (0 para cancelar): ");
+        int sel = sc.nextInt() - 1;
+
+        if (validarIndiceHechizo(sel, mago)) {
+            Hechizos hechizo = mago.getLibroDeHechizos().get(sel);
+            if (mago.usosMagia >= hechizo.getCosteMana()) {
+                int t = elegirObjetivo(sc);
+                if (validarIndice(t)) {
+                    hechizo.aplicarEfecto(enemigos.get(t));
+                    mago.usosMagia -= hechizo.getCosteMana();
+                    verificarMuerteEnemigo(t, jugador);
                 }
+            } else {
+                System.out.println("¡Sin maná!");
             }
         }
     }
 
-    // MÉTODO PARA MOSTRAR LAS BARRAS DE VIDA
+    private void ejecutarTurnoEnemigos(Jugador jugador) {
+        System.out.println("\n--- LOS ENEMIGOS CONTRATACAN ---");
+        for (Enemigo e : enemigos) {
+            if (jugador.estaVivo()) {
+                e.atacar(jugador);
+            }
+        }
+    }
+
+    // --- MÉTODOS AUXILIARES (UTILERÍA) ---
+
+    private int elegirObjetivo(Scanner sc) {
+        System.out.println("\n¿A quién apuntas?");
+        for (int i = 0; i < enemigos.size(); i++) {
+            System.out.println((i + 1) + ". " + enemigos.get(i).nombre);
+        }
+        System.out.print("Selección: ");
+        int sel = sc.nextInt() - 1;
+        sc.nextLine();
+        return sel;
+    }
+
+    private boolean validarIndice(int i) {
+        return i >= 0 && i < enemigos.size();
+    }
+
+    private boolean validarIndiceHechizo(int i, MAGO m) {
+        return i >= 0 && i < m.getLibroDeHechizos().size();
+    }
+
+    private void verificarMuerteEnemigo(int indice, Jugador jugador) {
+        Enemigo caido = enemigos.get(indice);
+
+        if (!caido.estaVivo()) {
+            System.out.println("¡" + caido.nombre + " ha caído!");
+
+            jugador.ganarExp(caido.getXpOtorgada());
+
+            enemigos.remove(indice);
+
+        }
+    }
+
+    private void anunciarResultado(Jugador j) {
+        if (j.estaVivo()) System.out.println("\nVictoria. Has despejado la sala.");
+        else System.out.println("\nHAS MUERTO. Tu viaje termina aquí.");
+    }
+
     private void mostrarEstadoGeneral(Jugador jugador) {
         System.out.println("\n" + "-".repeat(15) + " ESTADO " + "-".repeat(15));
-
-        // Vida del Jugador
         System.out.println(String.format("%-15s", jugador.nombre) + dibujarBarra(jugador.vida, jugador.vidaMax) + " " + jugador.vida + " HP");
-
-        System.out.println("\nENEMIGOS:");
         for (int i = 0; i < enemigos.size(); i++) {
             Enemigo e = enemigos.get(i);
-            String nombreConNumero = e.nombre + " " + (i + 1);
-            System.out.println(String.format("%-15s", nombreConNumero) + dibujarBarra(e.vida, e.vidaMax) + " " + e.vida + " HP");
+            System.out.println(String.format("%-15s", e.nombre + " " + (i+1)) + dibujarBarra(e.vida, e.vidaMax) + " " + e.vida + " HP");
         }
-        System.out.println("-".repeat(38));
     }
 
-    // LÓGICA PARA DIBUJAR LA BARRA [#####-----]
     private String dibujarBarra(int actual, int max) {
-        int totalBloques = 10;
-        // Calculamos cuántos bloques llenar (proporción)
-        int llenos = (int) ((double) actual / max * totalBloques);
-        if (llenos < 0) llenos = 0;
-
-        String barra = "[";
-        for (int i = 0; i < totalBloques; i++) {
-            if (i < llenos) barra += "#"; // Parte llena
-            else barra += "-";           // Parte vacía
-        }
-        return barra + "]";
+        int bloques = 10;
+        int llenos = Math.max(0, (int) ((double) actual / max * bloques));
+        return "[" + "#".repeat(llenos) + "-".repeat(bloques - llenos) + "]";
     }
 }

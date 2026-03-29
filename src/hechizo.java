@@ -1,10 +1,3 @@
-
-public interface Hechizos { // Debe ser 'interface'
-    String getNombreHechizo();
-    int getCosteMana();
-    void aplicarEfecto(Entidad objetivo); // Usamos Entidad como tipo
-}
-
 class BoladeFuego implements Hechizos {
     @Override
     public String getNombreHechizo() { return "Bola de Fuego"; }
