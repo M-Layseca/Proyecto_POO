@@ -1,7 +1,7 @@
 public class MODO_DIOS extends Jugador {
 
     public MODO_DIOS(String nombre) {
-        super(nombre + " El Administrador", 9999, 9999, 9999, 99);
+        super(nombre + " El Administrador", 9999, 9999, 0, 99);
     }
 
     @Override
