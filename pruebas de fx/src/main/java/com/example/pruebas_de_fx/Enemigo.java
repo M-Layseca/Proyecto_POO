@@ -12,10 +12,9 @@ public abstract class Enemigo extends Entidad {
 
     public int getXpOtorgada() { return xpOtorgada; }
 
-    // Ahora devuelve String para el log de la GUI
     public abstract String atacar(Jugador objetivo);
     @Override
     public String toString() {
-        return this.getNombre(); // O el atributo donde guardes su nombre
+        return this.getNombre();
     }
 }

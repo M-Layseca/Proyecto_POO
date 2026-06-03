@@ -12,8 +12,7 @@ import java.io.InputStream;
 public class VistaCreacionPersonaje {
     private VBox layout;
     private MenuPrincipal2 orquestador;
-    private ImageView imgPersonaje; // Componente visual para la imagen del héroe
-
+    private ImageView imgPersonaje;
     public VistaCreacionPersonaje(MenuPrincipal2 orquestador) {
         this.orquestador = orquestador;
         crearComponentes();
@@ -28,7 +27,7 @@ public class VistaCreacionPersonaje {
         lblTitulo.setStyle("-fx-font-size: 24; -fx-font-weight: bold;");
         lblTitulo.setTextFill(Color.WHITE);
 
-        // Campo para el nombre
+
         HBox contenedorNombre = new HBox(10);
         contenedorNombre.setAlignment(Pos.CENTER);
         Label lblNombre = new Label("Nombre:");
@@ -37,7 +36,7 @@ public class VistaCreacionPersonaje {
         TextField txtNombre = new TextField("Héroe");
         contenedorNombre.getChildren().addAll(lblNombre, txtNombre);
 
-        // Selector de Clase
+
         Label lblClase = new Label("Selecciona tu Arquetipo:");
         lblClase.setTextFill(Color.WHITE);
         lblClase.setStyle("-fx-font-size: 14;");
@@ -47,23 +46,20 @@ public class VistaCreacionPersonaje {
         selectorClase.setValue("GUERRERO");
         selectorClase.setStyle("-fx-font-size: 14;");
 
-        // --- Configuración del Visor de Imagen del Personaje ---
-        imgPersonaje = new ImageView();
-        imgPersonaje.setFitHeight(200); // Altura máxima en píxeles
-        imgPersonaje.setFitWidth(200);  // Ancho máximo en píxeles
-        imgPersonaje.setPreserveRatio(true); // Mantener proporciones para que no se deforme
 
-        // Cargar la imagen inicial por defecto (GUERRERO)
+        imgPersonaje = new ImageView();
+        imgPersonaje.setFitHeight(200);
+        imgPersonaje.setFitWidth(200);
+        imgPersonaje.setPreserveRatio(true);
+
         actualizarImagenPersonaje("GUERRERO");
 
-        // DETECTOR DE CAMBIOS (Listener): Cambia la imagen automáticamente al seleccionar otra opción
         selectorClase.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 actualizarImagenPersonaje(newValue);
             }
         });
 
-        // Botón de confirmación y construcción lógica
         Button btnConfirmar = new Button("COMENZAR AVENTURA");
         btnConfirmar.setPrefWidth(220);
         btnConfirmar.setStyle("-fx-base: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;");
@@ -74,7 +70,6 @@ public class VistaCreacionPersonaje {
                 nombreInput = "Desconocido";
             }
 
-            // Polimorfismo según la selección del usuario
             Jugador nuevoJugador;
             switch (selectorClase.getValue()) {
                 case "MAGO":
@@ -89,7 +84,6 @@ public class VistaCreacionPersonaje {
                     break;
             }
 
-            // Entregar el jugador creado al orquestador central para iniciar el bucle de salas
             orquestador.iniciarSimulacionDeJuego(nuevoJugador);
         });
 
@@ -98,13 +92,12 @@ public class VistaCreacionPersonaje {
         btnVolver.setStyle("-fx-base: #7f8c8d; -fx-text-fill: white;");
         btnVolver.setOnAction(e -> orquestador.mostrarMenuInicio());
 
-        // Agregamos la vista de la imagen entre el selector y los botones
         layout.getChildren().addAll(
                 lblTitulo,
                 contenedorNombre,
                 lblClase,
                 selectorClase,
-                imgPersonaje, // <-- La imagen se posiciona aquí en el centro
+                imgPersonaje,
                 btnConfirmar,
                 btnVolver
         );
@@ -113,7 +106,6 @@ public class VistaCreacionPersonaje {
     private void actualizarImagenPersonaje(String clase) {
         String rutaImagen = "";
 
-        // Mapeamos cada clase con su respectivo archivo (usa nombres en minúsculas o como los tengas guardados)
         switch (clase) {
             case "MAGO":
                 rutaImagen = "/img/mago.png";
@@ -128,14 +120,13 @@ public class VistaCreacionPersonaje {
         }
 
         try {
-            // Buscamos el recurso usando la ruta absoluta desde la raíz de resources
             InputStream stream = getClass().getResourceAsStream(rutaImagen);
             if (stream != null) {
                 Image nuevaImagen = new Image(stream);
                 imgPersonaje.setImage(nuevaImagen);
             } else {
                 System.out.println("No se encontró la imagen en la ruta: " + rutaImagen);
-                imgPersonaje.setImage(null); // Limpia el componente si no hay imagen
+                imgPersonaje.setImage(null);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar la imagen del personaje: " + e.getMessage());

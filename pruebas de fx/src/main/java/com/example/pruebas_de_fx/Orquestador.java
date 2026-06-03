@@ -10,7 +10,6 @@ public class Orquestador {
         this.rand = new Random();
     }
 
-    // Genera una batalla aleatoria para ser usada por la Interfaz
     public Batalla generarBatallaAleatoria() {
         ArrayList<Enemigo> horda = new ArrayList<>();
         int cantidadEnemigos = rand.nextInt(3) + 1;

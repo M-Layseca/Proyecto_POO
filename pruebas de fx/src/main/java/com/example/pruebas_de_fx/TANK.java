@@ -12,7 +12,6 @@ public class TANK extends Jugador {
             int cura = (vidaMax*2 - vida) / 2;
             this.vida += cura;
 
-            // Aseguramos que no pase del máximo
             if (this.vida > vidaMax) {
                 this.vida = vidaMax;
             }

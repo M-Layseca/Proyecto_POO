@@ -11,7 +11,7 @@ import javafx.util.StringConverter;
 import java.io.InputStream;
 
 public class InterfazdeCombate {
-    private StackPane rootContainer; // Contenedor raíz para soportar la capa de fondo
+    private StackPane rootContainer;
     private VBox layout;
     private ProgressBar barraVidaJugador;
     private ProgressBar barraXpJugador;
@@ -19,18 +19,15 @@ public class InterfazdeCombate {
     private Label labelXpTexto;
     private Jugador jugador;
     private Batalla batalla;
-    private HBox contenedorEnemigos; // Cambiado de VBox a HBox para alineación horizontal estilo Pokémon
-
+    private HBox contenedorEnemigos;
     private ComboBox<Enemigo> selectorEnemigos;
     private ComboBox<Hechizos> selectorHechizos;
     private HBox zonaMagia;
     private HBox botonesPrincipales;
     private MenuPrincipal2 juegoPrincipal;
 
-    // --- COMPONENTES VISUALES ---
     private ImageView imgJugador;
-    private AnchorPane zonaVisualCombate; // Cambiado a AnchorPane para posicionamiento absoluto (estilo Pokémon)
-
+    private AnchorPane zonaVisualCombate;
     public InterfazdeCombate(Jugador jugador, Batalla batalla, MenuPrincipal2 juegoPrincipal) {
         this.jugador = jugador;
         this.batalla = batalla;
@@ -39,11 +36,9 @@ public class InterfazdeCombate {
     }
 
     private void crearInterfaz() {
-        // 1. Inicializar el contenedor de capas
         rootContainer = new StackPane();
         rootContainer.setPrefSize(800, 600);
 
-        // 2. Capa de Fondo
         try {
             InputStream fondoStream = getClass().getResourceAsStream("/img/fondo_batalla.jpg");
             if (fondoStream != null) {
@@ -63,12 +58,10 @@ public class InterfazdeCombate {
             rootContainer.setStyle("-fx-background-color: #121212;");
         }
 
-        // 3. Contenedor principal del contenido
         layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: rgba(0, 0, 0, 0.65); -fx-padding: 20;");
 
-        // --- SECCIÓN SUPERIOR: ESTADO DEL JUGADOR ---
         VBox panelEstadoJugador = new VBox(5);
         panelEstadoJugador.setAlignment(Pos.CENTER_LEFT);
         panelEstadoJugador.setStyle("-fx-background-color: rgba(44, 62, 80, 0.6); -fx-padding: 10; -fx-background-radius: 5;");
@@ -93,45 +86,33 @@ public class InterfazdeCombate {
         actualizarBarrasEstado();
         panelEstadoJugador.getChildren().addAll(lblNombre, labelVidaTexto, barraVidaJugador, labelXpTexto, barraXpJugador);
 
-
-        // --- SECCIÓN CENTRAL: ZONA VISUAL DE COMBATE (PERSPECTIVA POKÉMON) ---
         zonaVisualCombate = new AnchorPane();
-        zonaVisualCombate.setPrefHeight(220); // Altura fija para controlar el espacio del duelo
+        zonaVisualCombate.setPrefHeight(220);
         zonaVisualCombate.setStyle("-fx-padding: 10;");
 
-        // Imagen del Jugador
         imgJugador = new ImageView();
         imgJugador.setFitHeight(150);
         imgJugador.setFitWidth(150);
         imgJugador.setPreserveRatio(true);
         cargarImagenEntidad(imgJugador, jugador.getClass().getSimpleName().toLowerCase());
 
-        // Anclar al jugador ABAJO a la IZQUIERDA
         AnchorPane.setBottomAnchor(imgJugador, 10.0);
         AnchorPane.setLeftAnchor(imgJugador, 40.0);
 
-        // Contenedor horizontal de enemigos
         contenedorEnemigos = new HBox(25);
         contenedorEnemigos.setAlignment(Pos.CENTER);
 
-        // Anclar al grupo de enemigos ARRIBA a la DERECHA
         AnchorPane.setTopAnchor(contenedorEnemigos, 10.0);
         AnchorPane.setRightAnchor(contenedorEnemigos, 40.0);
 
-        actualizarContenedorEnemigos(); // Renderiza los enemigos iniciales
+        actualizarContenedorEnemigos();
 
-        // Añadir elementos a la zona de duelo
         zonaVisualCombate.getChildren().addAll(imgJugador, contenedorEnemigos);
 
-
-
-
-        // Selector de Enemigos
         selectorEnemigos = new ComboBox<>();
         selectorEnemigos.setStyle("-fx-font-size: 13;");
         actualizarSelectorEnemigos();
 
-        // Selector de Hechizos con Convertidor de Texto para evitar rutas raras (.toString automático)
         selectorHechizos = new ComboBox<>();
         selectorHechizos.setStyle("-fx-font-size: 13;");
         selectorHechizos.setConverter(new StringConverter<Hechizos>() {
@@ -159,7 +140,6 @@ public class InterfazdeCombate {
             zonaMagia.getChildren().addAll(lblMagia, selectorHechizos);
         }
 
-        // Configuración de Botones de acción
         botonesPrincipales = new HBox(15);
         botonesPrincipales.setAlignment(Pos.CENTER);
 
@@ -177,7 +157,6 @@ public class InterfazdeCombate {
 
         botonesPrincipales.getChildren().addAll(btnAtacar, btnPasiva, btnCurar);
 
-        // Agregamos todos los paneles al VBox principal
         layout.getChildren().addAll(
                 panelEstadoJugador,
                 zonaVisualCombate,
@@ -191,12 +170,11 @@ public class InterfazdeCombate {
     private void ejecutarAccion(String tipo) {
         Enemigo objetivo = selectorEnemigos.getValue();
 
-        // Validación silenciosa: si no hay objetivo para atacar, cancelamos la acción
         if ((tipo.equals("ATACAR") || (tipo.equals("PASIVA") && jugador instanceof MAGO)) && objetivo == null) {
             return;
         }
 
-        boolean pasoTurno = false; // Bandera para controlar si la acción consume el turno
+        boolean pasoTurno = false;
 
         switch (tipo) {
             case "ATACAR":
@@ -214,7 +192,7 @@ public class InterfazdeCombate {
                         }
                         pasoTurno = true;
                     } else {
-                        return; // No hay maná, no consume turno ni ataca el enemigo
+                        return;
                     }
                 } else {
                     batalla.turnoJugador(jugador, objetivo);
@@ -228,31 +206,23 @@ public class InterfazdeCombate {
                 break;
 
             case "CURAR":
-                // Ejecutamos la curación interna del modelo
                 String msgCurar = jugador.usarEstus();
 
-                // CORRECCIÓN CRÍTICA: Validamos si la curación fue exitosa o falló por falta de frascos
                 if (msgCurar != null && msgCurar.contains("¡No te quedan frascos")) {
-                    // Si sale este mensaje, detenemos la acción aquí para que el jugador pueda elegir otra opción
-                    System.out.println(msgCurar); // Log auxiliar en consola de desarrollo si lo deseas
+                    System.out.println(msgCurar);
                     return;
                 }
-
-                // Si la curación fue exitosa, permitimos que el turno avance
                 pasoTurno = true;
                 break;
         }
 
-        // Primero actualizamos las barras inmediatamente después de que el jugador actúe
         actualizarBarrasEstado();
         actualizarSelectorEnemigos();
         actualizarContenedorEnemigos();
 
-        // Si la acción fue válida y quedan rivales, ellos ejecutan su contraataque
         if (pasoTurno && !batalla.getEnemigos().isEmpty()) {
             batalla.turnoEnemigos(jugador);
 
-            // Volvemos a actualizar para reflejar el daño recibido por los enemigos
             actualizarBarrasEstado();
             actualizarSelectorEnemigos();
             actualizarContenedorEnemigos();

@@ -33,7 +33,6 @@ public abstract class Entidad {
         return this.vida > 0;
     }
 
-    // Getters para JavaFX
     public String getNombre() { return nombre; }
     public int getVida() { return vida; }
     public int getVidaMax() { return vidaMax; }

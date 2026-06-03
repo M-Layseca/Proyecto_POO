@@ -48,7 +48,6 @@ public abstract class Jugador extends Entidad{
             this.estus--;
             this.vida += 30;
 
-            // Comprobación
             if (this.vida > this.vidaMax) {
                 this.vida = this.vidaMax;
             }

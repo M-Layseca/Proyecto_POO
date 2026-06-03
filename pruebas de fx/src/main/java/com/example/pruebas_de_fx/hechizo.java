@@ -11,7 +11,7 @@ class BoladeFuego implements Hechizos {
     public void aplicarEfecto(Jugador lanzador, Entidad objetivo) {
         int daniobase = 40 + lanzador.inteligencia;
         System.out.println("¡Una explosión de fuego alcanza a " + objetivo.nombre + "!");
-        objetivo.recibirDanio(daniobase); // Usamos el método de Entidad
+        objetivo.recibirDanio(daniobase);
     }
 }
 class FlechadeAlma implements Hechizos {

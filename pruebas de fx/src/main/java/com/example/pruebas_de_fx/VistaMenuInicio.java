@@ -17,8 +17,8 @@ import javafx.util.Duration;
 import java.io.InputStream;
 
 public class VistaMenuInicio {
-    private StackPane rootContainer; // Contenedor principal de capas (Fondo Negro -> GIF -> Contenido)
-    private VBox layoutContenido;    // Contenedor vertical para título y botones
+    private StackPane rootContainer;
+    private VBox layoutContenido;
     private MenuPrincipal2 orquestador;
     private Timeline animacionParpadeo;
 
@@ -28,14 +28,10 @@ public class VistaMenuInicio {
     }
 
     private void crearComponentes() {
-        // 1. Inicializar el contenedor raíz de capas
         rootContainer = new StackPane();
-        // Color de fondo negro absoluto de base
         rootContainer.setStyle("-fx-background-color: #000000;");
 
-        // 2. CAPA INTERMEDIA: El GIF de fondo con transparencia
         try {
-            // Reemplaza "fondo.gif" por la ruta exacta de tu archivo dentro de src/main/resources
             InputStream stream = getClass().getResourceAsStream("/img/dark-souls.gif");
             if (stream != null) {
                 Image gifImagen = new Image(stream);
@@ -43,9 +39,8 @@ public class VistaMenuInicio {
 
                 gifFondo.setFitWidth(800);
                 gifFondo.setFitHeight(600);
-                gifFondo.setPreserveRatio(true); // Mantiene la proporción si lo deseas
+                gifFondo.setPreserveRatio(true);
 
-                // Añadir el GIF al StackPane (se dibuja primero, sobre el fondo negro)
                 rootContainer.getChildren().add(gifFondo);
             } else {
                 System.out.println("No se pudo encontrar el archivo GIF. Verifica la ruta en resources.");
@@ -54,19 +49,15 @@ public class VistaMenuInicio {
             System.out.println("Error al cargar el GIF de fondo: " + e.getMessage());
         }
 
-        // 3. CAPA SUPERIOR: Textos y Botones
         layoutContenido = new VBox(25);
         layoutContenido.setAlignment(Pos.CENTER);
-        // Dejamos el fondo de este VBox transparente para que se vea el GIF de atrás
         layoutContenido.setStyle("-fx-background-color: transparent; -fx-padding: 40;");
 
-        // Título del Juego
         Label lblTitulo = new Label("Dark Souls: POO Edition");
         lblTitulo.setFont(Font.font("Verdana", 36));
         lblTitulo.setTextFill(Color.web("#FFFFFF"));
         lblTitulo.setStyle("-fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 
-        // --- Lógica del Parpadeo (Timeline) ---
         animacionParpadeo = new Timeline(
                 new KeyFrame(Duration.seconds(0.0), e -> lblTitulo.setOpacity(1.0)),
                 new KeyFrame(Duration.seconds(0.6), e -> lblTitulo.setOpacity(0.15)),
@@ -75,13 +66,12 @@ public class VistaMenuInicio {
         animacionParpadeo.setCycleCount(Animation.INDEFINITE);
         animacionParpadeo.play(); // Iniciar animación automáticamente
 
-        // Botones existentes
         Button btnNuevaPartida = new Button("NUEVA PARTIDA");
         btnNuevaPartida.setPrefWidth(200);
         btnNuevaPartida.setStyle("-fx-base: #2c3e50; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;");
 
         btnNuevaPartida.setOnAction(e -> {
-            detenerAnimacion(); // Limpieza para evitar fugas de memoria al cambiar de escena
+            detenerAnimacion();
             orquestador.mostrarCreacionPersonaje();
         });
 
@@ -93,10 +83,8 @@ public class VistaMenuInicio {
             System.exit(0);
         });
 
-        // Agregamos los elementos al VBox
         layoutContenido.getChildren().addAll(lblTitulo, btnNuevaPartida, btnSalir);
 
-        // Agregamos el VBox al StackPane central (quedará encima de todo)
         rootContainer.getChildren().add(layoutContenido);
     }
 

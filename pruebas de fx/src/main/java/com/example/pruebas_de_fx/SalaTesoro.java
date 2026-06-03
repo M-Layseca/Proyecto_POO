@@ -18,7 +18,7 @@ public class SalaTesoro extends Salas {
         switch (premio) {
             case 0:
                 jugador.vidaMax += 200;
-                jugador.vida = jugador.vidaMax; // Curación completa al mejorar
+                jugador.vida = jugador.vidaMax;
                 System.out.println("¡Has encontrado un Fragmento de Estus! Tu vida máxima aumenta.");
                 break;
             case 1:
