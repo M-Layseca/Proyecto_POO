@@ -39,8 +39,17 @@ public class InterfazdeCombate {
         rootContainer = new StackPane();
         rootContainer.setPrefSize(800, 600);
 
+        String rutaFondo = "/img/fondo_batalla.jpg"; // Fondo por defecto
+
+        for (Enemigo e : batalla.getEnemigos()) {
+            if (e instanceof Herobrine) {
+                rutaFondo = "/img/fondo_herobrine.png";
+                break;
+            }
+        }
+
         try {
-            InputStream fondoStream = getClass().getResourceAsStream("/img/fondo_batalla.jpg");
+            InputStream fondoStream = getClass().getResourceAsStream(rutaFondo);
             if (fondoStream != null) {
                 Image imagenFormateada = new Image(fondoStream, 800, 600, false, true);
                 BackgroundImage fondoImg = new BackgroundImage(
@@ -50,7 +59,7 @@ public class InterfazdeCombate {
                 );
                 rootContainer.setBackground(new Background(fondoImg));
             } else {
-                System.out.println("ADVERTENCIA: No se encontró la imagen en src/main/resources/img/fondobatalla.png");
+                System.out.println("ADVERTENCIA: No se encontró la imagen en " + rutaFondo);
                 rootContainer.setStyle("-fx-background-color: #121212;");
             }
         } catch (Exception e) {
@@ -58,6 +67,7 @@ public class InterfazdeCombate {
             rootContainer.setStyle("-fx-background-color: #121212;");
         }
 
+        // --- 3. Resto de la interfaz ---
         layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: rgba(0, 0, 0, 0.65); -fx-padding: 20;");
@@ -138,6 +148,15 @@ public class InterfazdeCombate {
             Label lblMagia = new Label("Hechizos:");
             lblMagia.setTextFill(Color.WHITE);
             zonaMagia.getChildren().addAll(lblMagia, selectorHechizos);
+        } else if(jugador instanceof Steve) {
+            Steve steve = (Steve) jugador;
+            selectorHechizos.getItems().addAll(steve.getLibroDeHabilidades());
+            if (!steve.getLibroDeHabilidades().isEmpty()) {
+                selectorHechizos.setValue(steve.getLibroDeHabilidades().get(0));
+            }
+            Label lblInventario = new Label("Inventario:");
+            lblInventario.setTextFill(Color.WHITE);
+            zonaMagia.getChildren().addAll(lblInventario, selectorHechizos);
         }
 
         botonesPrincipales = new HBox(15);
@@ -183,7 +202,6 @@ public class InterfazdeCombate {
                     MAGO mago = (MAGO) jugador;
                     if (hechizoSeleccionado != null && mago.usosMagia >= hechizoSeleccionado.getCosteMana()) {
                         mago.usosMagia -= hechizoSeleccionado.getCosteMana();
-
                         hechizoSeleccionado.aplicarEfecto(jugador, objetivo);
 
                         if (!objetivo.estaVivo()) {
@@ -192,6 +210,24 @@ public class InterfazdeCombate {
                         }
                         pasoTurno = true;
                     } else {
+                        System.out.println("¡No tienes suficiente Maná!");
+                        return;
+                    }
+                }
+                else if (jugador instanceof Steve) {
+                    Hechizos habilidad = selectorHechizos.getValue();
+                    Steve steve = (Steve) jugador;
+                    if (habilidad != null && steve.usosMagia >= habilidad.getCosteMana()) {
+                        steve.usosMagia -= habilidad.getCosteMana();
+                        habilidad.aplicarEfecto(jugador, objetivo);
+
+                        if (!objetivo.estaVivo()) {
+                            jugador.ganarExp(objetivo.getXpOtorgada());
+                            batalla.getEnemigos().remove(objetivo);
+                        }
+                        pasoTurno = true;
+                    } else {
+                        System.out.println("¡No tienes suficientes materiales!");
                         return;
                     }
                 } else {
@@ -244,6 +280,8 @@ public class InterfazdeCombate {
 
         if (jugador instanceof MAGO) {
             labelXpTexto.setText("Almas: " + jugador.getXpActual() + " / 100 | MP: " + ((MAGO) jugador).usosMagia + "/" + ((MAGO) jugador).maxUsos);
+        } else if (jugador instanceof Steve) {
+            labelXpTexto.setText("Almas: " + jugador.getXpActual() + " / 100 | Materiales: " + ((Steve) jugador).usosMagia + "/" + ((Steve) jugador).maxUsos);
         } else {
             labelXpTexto.setText("Almas: " + jugador.getXpActual() + " / 100 | Usos Pasiva: " + jugador.usosPasiva);
         }

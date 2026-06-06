@@ -42,7 +42,7 @@ public class VistaCreacionPersonaje {
         lblClase.setStyle("-fx-font-size: 14;");
 
         ComboBox<String> selectorClase = new ComboBox<>();
-        selectorClase.getItems().addAll("GUERRERO", "MAGO", "TANK");
+        selectorClase.getItems().addAll("GUERRERO", "MAGO", "TANK", "STEVE");
         selectorClase.setValue("GUERRERO");
         selectorClase.setStyle("-fx-font-size: 14;");
 
@@ -78,6 +78,9 @@ public class VistaCreacionPersonaje {
                 case "TANK":
                     nuevoJugador = new TANK(nombreInput);
                     break;
+                case "STEVE":
+                    nuevoJugador = new Steve(nombreInput);
+                    break;
                 case "GUERRERO":
                 default:
                     nuevoJugador = new GUERRERO(nombreInput);
@@ -112,6 +115,9 @@ public class VistaCreacionPersonaje {
                 break;
             case "TANK":
                 rutaImagen = "/img/tank.png";
+                break;
+            case "STEVE":
+                rutaImagen = "/img/steve.png";
                 break;
             case "GUERRERO":
             default:

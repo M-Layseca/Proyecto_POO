@@ -52,3 +52,17 @@ class Resplandor_Final implements Hechizos{
         objetivo.recibirDanio(daniobase);
     }
 }
+
+class Nicos_attack implements Hechizos{
+    @Override
+    public String getNombreHechizo(){return "Nicos";}
+    @Override
+    public int getCosteMana(){return 10;}
+    @Override
+    public void aplicarEfecto(Jugador lanzador, Entidad objetivo) {
+        int daniobase = 200 + lanzador.inteligencia;
+        System.out.println("Muere Insecto!!");
+        objetivo.recibirDanio(daniobase);
+    }
+
+}

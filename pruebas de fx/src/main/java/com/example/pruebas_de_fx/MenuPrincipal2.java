@@ -54,8 +54,13 @@ public class MenuPrincipal2 extends Application {
         if (salaActual == 10) {
             System.out.println("¡Avanzando a la Sala Final: El Altar de la Ceniza!");
             ArrayList<Enemigo> enemigosBoss = new ArrayList<>();
-            enemigosBoss.add(new Boss());
 
+            if (jugador instanceof Steve) {
+                System.out.println("La niebla se espesa... Una presencia siniestra observa a Steve.");
+                enemigosBoss.add(new Herobrine()); // Herobrine
+            } else {
+                enemigosBoss.add(new Boss()); // El Gran Molinillo El terrible
+            }
             Batalla batallaBoss = new Batalla("Altar de la Ceniza", "El fin de tu viaje se decide aquí.", enemigosBoss);
             InterfazdeCombate pantallaCombate = new InterfazdeCombate(jugador, batallaBoss, this);
             rootLayout.getChildren().setAll(pantSelf(pantallaCombate.getLayout()));
