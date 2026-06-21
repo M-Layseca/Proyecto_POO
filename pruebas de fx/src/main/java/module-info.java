@@ -12,6 +12,7 @@ module com.example.pruebas_de_fx {
     requires com.almasb.fxgl.all;
     requires java.compiler;
     requires annotations;
+    requires javafx.media;
 
     opens com.example.pruebas_de_fx to javafx.fxml;
     exports com.example.pruebas_de_fx;

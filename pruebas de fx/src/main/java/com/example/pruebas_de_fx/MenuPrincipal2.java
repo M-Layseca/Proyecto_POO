@@ -3,15 +3,20 @@ package com.example.pruebas_de_fx;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.File;
+
+import static com.example.pruebas_de_fx.SoundManager.playBackgroundMusic;
 
 public class MenuPrincipal2 extends Application {
     private Stage primaryStage;
     private StackPane rootLayout;
     private Jugador jugador;
     private int salaActual = 1;
+    private SoundManager playBackgroundMusic;
 
     @Override
     public void start(Stage primaryStage) {
@@ -22,7 +27,7 @@ public class MenuPrincipal2 extends Application {
         primaryStage.setTitle("Dark Souls: POO Edition");
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        playBackgroundMusic("menu_theme.mp3");
         mostrarMenuInicio();
     }
 
@@ -79,10 +84,13 @@ public class MenuPrincipal2 extends Application {
         int probabilidadSala = rand.nextInt(100);
 
         if (probabilidadSala < 40) {
-
+            playBackgroundMusic("treasure_theme.mp3");
             VistaSalaTesoro pantallaTesoro = new VistaSalaTesoro(jugador, this);
             rootLayout.getChildren().setAll(pantallaTesoro.getLayout());
+
         } else {
+
+            playBackgroundMusic("battle_theme.mp3");
 
             ArrayList<Enemigo> enemigosAleatorios = new ArrayList<>();
 
