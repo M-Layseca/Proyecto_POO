@@ -27,7 +27,7 @@ public class MenuPrincipal2 extends Application {
         primaryStage.setTitle("Dark Souls: POO Edition");
         primaryStage.setScene(scene);
         primaryStage.show();
-        playBackgroundMusic("menu_theme.mp3");
+        playBackgroundMusic("menu_theme.wav");
         mostrarMenuInicio();
     }
 
@@ -84,13 +84,13 @@ public class MenuPrincipal2 extends Application {
         int probabilidadSala = rand.nextInt(100);
 
         if (probabilidadSala < 40) {
-            playBackgroundMusic("treasure_theme.mp3");
+            playBackgroundMusic("treasure_theme.wav");
             VistaSalaTesoro pantallaTesoro = new VistaSalaTesoro(jugador, this);
             rootLayout.getChildren().setAll(pantallaTesoro.getLayout());
 
         } else {
 
-            playBackgroundMusic("battle_theme.mp3");
+            playBackgroundMusic("battle_theme.wav");
 
             ArrayList<Enemigo> enemigosAleatorios = new ArrayList<>();
 
