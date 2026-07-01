@@ -8,10 +8,27 @@ import javafx.scene.paint.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+/**
+ * Vista gráfica (JavaFX) de la sala de tesoro. Ejecuta la lógica de
+ * {@link SalaTesoro}, captura su salida por consola para mostrarla en
+ * pantalla, y presenta un botón para continuar a la siguiente sala.
+ */
 public class VistaSalaTesoro {
+
+    /** Contenedor raíz de la vista. */
     private VBox layout;
+
+    /** Referencia al controlador principal, usada para avanzar de sala. */
     private MenuPrincipal2 orquestador;
 
+    /**
+     * Construye la vista de sala de tesoro: ejecuta la lógica de
+     * {@link SalaTesoro#entrar(Jugador)} capturando su salida por
+     * consola, y arma la interfaz gráfica con el resultado obtenido.
+     *
+     * @param jugador jugador que recibe la recompensa de la sala.
+     * @param orquestador controlador principal usado para navegar a la siguiente sala.
+     */
     public VistaSalaTesoro(Jugador jugador, MenuPrincipal2 orquestador) {
         this.orquestador = orquestador;
 
@@ -44,6 +61,12 @@ public class VistaSalaTesoro {
         layout.getChildren().addAll(lblTitulo, lblPremio, btnContinuar);
     }
 
+    /**
+     * Obtiene el contenedor raíz de la vista, listo para insertarse en
+     * la escena de JavaFX.
+     *
+     * @return layout raíz de la vista.
+     */
     public VBox getLayout() {
         return layout;
     }

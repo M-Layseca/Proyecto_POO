@@ -10,24 +10,70 @@ import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 import java.io.InputStream;
 
+/**
+ * Se usa la vista gráfica de Java_FX principal del combate por turnos. Muestra el
+ * estado del jugador y de los enemigos, permite seleccionar objetivo y
+ * hechizos/habilidades, ejecuta las acciones de combate (atacar, usar
+ * pasiva, curar) y gestiona la transición al finalizar la batalla.
+ */
 public class InterfazdeCombate {
+
+    /** Contenedor raíz de la vista (incluye el fondo de batalla). */
     private StackPane rootContainer;
+
+    /** Contenedor principal del contenido de la interfaz de combate. */
     private VBox layout;
+
+    /** Barra de progreso que representa la vida actual del jugador. */
     private ProgressBar barraVidaJugador;
+
+    /** Barra de progreso que representa la experiencia actual del jugador. */
     private ProgressBar barraXpJugador;
+
+    /** Etiqueta de texto con el detalle numérico de la vida del jugador. */
     private Label labelVidaTexto;
+
+    /** Etiqueta de texto con el detalle numérico de experiencia/recurso del jugador. */
     private Label labelXpTexto;
+
+    /** Personaje que participa en el combate. */
     private Jugador jugador;
+
+    /** Batalla en curso, con la lista de enemigos activos. */
     private Batalla batalla;
+
+    /** Contenedor visual de las tarjetas de los enemigos (imagen, nombre y vida). */
     private HBox contenedorEnemigos;
+
+    /** Selector del enemigo objetivo del próximo ataque. */
     private ComboBox<Enemigo> selectorEnemigos;
+
+    /** Selector del hechizo o habilidad especial a utilizar (Mago/Steve). */
     private ComboBox<Hechizos> selectorHechizos;
+
+    /** Contenedor que agrupa el selector de hechizos/habilidades con su etiqueta. */
     private HBox zonaMagia;
+
+    /** Contenedor de los botones de acción principal (Atacar, Pasiva, Curar). */
     private HBox botonesPrincipales;
+
+    /** Referencia al controlador principal, usado para avanzar de sala al terminar el combate. */
     private MenuPrincipal2 juegoPrincipal;
 
+    /** Imagen del jugador dentro de la escena de combate. */
     private ImageView imgJugador;
+
+    /** Panel que posiciona libremente al jugador y los enemigos dentro de la escena de combate. */
     private AnchorPane zonaVisualCombate;
+
+    /**
+     * Construye la interfaz de combate para el jugador y la batalla
+     * indicados.
+     *
+     * @param jugador jugador que participa en el combate.
+     * @param batalla batalla en curso, con los enemigos a enfrentar.
+     * @param juegoPrincipal controlador principal usado para avanzar de sala al finalizar.
+     */
     public InterfazdeCombate(Jugador jugador, Batalla batalla, MenuPrincipal2 juegoPrincipal) {
         this.jugador = jugador;
         this.batalla = batalla;
@@ -35,6 +81,13 @@ public class InterfazdeCombate {
         crearInterfaz();
     }
 
+    /**
+     * Crea y ensambla todos los componentes gráficos de la interfaz de
+     * combate: fondo de batalla (según el tipo de enemigo), panel de
+     * estado del jugador, zona visual de combate (jugador y enemigos),
+     * selector de objetivo y hechizos/habilidades, y los botones de
+     * acción principal.
+     */
     private void crearInterfaz() {
         rootContainer = new StackPane();
         rootContainer.setPrefSize(800, 600);
@@ -186,6 +239,16 @@ public class InterfazdeCombate {
         rootContainer.getChildren().add(layout);
     }
 
+    /**
+     * Ejecuta la acción de combate seleccionada por el jugador
+     * ("ATACAR", "PASIVA" o "CURAR"), procesando la lógica específica
+     * de cada clase de personaje (ataque básico, hechizo de Mago o
+     * habilidad de Steve). Tras la acción del jugador, actualiza la
+     * interfaz, ejecuta el turno de los enemigos (si quedan enemigos
+     * vivos) y verifica si el combate ha finalizado.
+     *
+     * @param tipo tipo de acción a ejecutar: "ATACAR", "PASIVA" o "CURAR".
+     */
     private void ejecutarAccion(String tipo) {
         Enemigo objetivo = selectorEnemigos.getValue();
 
@@ -267,6 +330,12 @@ public class InterfazdeCombate {
         verificarFinCombate();
     }
 
+    /**
+     * Actualiza las barras de vida y experiencia/recurso del jugador en
+     * pantalla según su estado actual. El texto de recurso mostrado
+     * varía según la clase del jugador (maná para Mago, materiales
+     * para Steve, usos de pasiva para el resto).
+     */
     private void actualizarBarrasEstado() {
 
         System.out.println("DEBUG INTERFAZ - Vida actual del jugador: " + jugador.getVida() + " / " + jugador.getVidaMax());
@@ -287,6 +356,11 @@ public class InterfazdeCombate {
         }
     }
 
+    /**
+     * Actualiza la lista de enemigos disponibles en el selector de
+     * objetivo, conservando la selección actual si el enemigo sigue
+     * vivo, o seleccionando el primero disponible en caso contrario.
+     */
     private void actualizarSelectorEnemigos() {
         Enemigo seleccionadoActual = selectorEnemigos.getValue();
         selectorEnemigos.getItems().clear();
@@ -299,6 +373,11 @@ public class InterfazdeCombate {
         }
     }
 
+    /**
+     * Reconstruye las tarjetas visuales de todos los enemigos activos
+     * de la batalla (imagen, nombre y barra de vida) dentro del
+     * contenedor de enemigos.
+     */
     private void actualizarContenedorEnemigos() {
         contenedorEnemigos.getChildren().clear();
 
@@ -326,6 +405,14 @@ public class InterfazdeCombate {
         }
     }
 
+    /**
+     * Carga la imagen de una entidad (jugador o enemigo) desde el
+     * classpath, a partir del nombre de su clase, y la asigna al
+     * {@link ImageView} indicado.
+     *
+     * @param iv componente de imagen donde se mostrará la textura cargada.
+     * @param nombreArchivo nombre del archivo de imagen (sin extensión), típicamente el nombre de la clase en minúsculas.
+     */
     private void cargarImagenEntidad(ImageView iv, String nombreArchivo) {
         try {
             String ruta = "/img/" + nombreArchivo + ".png";
@@ -340,6 +427,11 @@ public class InterfazdeCombate {
         }
     }
 
+    /**
+     * Verifica si el combate ha terminado: si el jugador ha caído,
+     * habilita la opción de reintentar; si todos los enemigos han sido
+     * derrotados, habilita la opción de avanzar a la siguiente sala.
+     */
     private void verificarFinCombate() {
         if (!jugador.estaVivo()) {
             cambiarBotonAvanzar("REINTENTAR DESDE LA HOGUERA");
@@ -348,6 +440,13 @@ public class InterfazdeCombate {
         }
     }
 
+    /**
+     * Reemplaza los botones de acción principal por un único botón de
+     * progreso (reintentar o avanzar), deshabilitando además los
+     * selectores de enemigo y hechizos/habilidades.
+     *
+     * @param textoBoton texto a mostrar en el botón de progreso.
+     */
     private void cambiarBotonAvanzar(String textoBoton) {
         if (botonesPrincipales != null) {
             botonesPrincipales.getChildren().clear();
@@ -367,6 +466,12 @@ public class InterfazdeCombate {
         selectorHechizos.setDisable(true);
     }
 
+    /**
+     * Obtiene el contenedor raíz de la vista, listo para insertarse en
+     * la escena de JavaFX.
+     *
+     * @return layout raíz de la vista.
+     */
     public StackPane getLayout() {
         return rootContainer;
     }

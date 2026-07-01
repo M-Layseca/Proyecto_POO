@@ -11,13 +11,36 @@ import java.io.File;
 
 import static com.example.pruebas_de_fx.SoundManager.playBackgroundMusic;
 
+/**
+ * Clase principal de la aplicación JavaFX y controlador central del
+ * flujo del juego. Se encarga de inicializar la ventana, alternar
+ * entre las distintas vistas (menú, creación de personaje, salas de
+ * tesoro y combates) y de generar la progresión de salas hasta llegar
+ * al jefe final.
+ */
 public class MenuPrincipal2 extends Application {
+
+    /** Ventana principal de la aplicación. */
     private Stage primaryStage;
+
+    /** Contenedor raíz donde se intercambian las distintas vistas. */
     private StackPane rootLayout;
+
+    /** Personaje jugador de la partida en curso. */
     private Jugador jugador;
+
+    /** Número de la sala actual dentro de la progresión (1 a 10, 10 es el jefe final). */
     private int salaActual = 1;
+
+    /** Campo declarado pero no utilizado (referencia residual de refactorización). */
     private SoundManager playBackgroundMusic;
 
+    /**
+     * Punto de entrada de JavaFX. Inicializa la ventana principal,
+     * reproduce la música del menú y muestra la pantalla de inicio.
+     *
+     * @param primaryStage ventana principal provista por JavaFX.
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -31,22 +54,45 @@ public class MenuPrincipal2 extends Application {
         mostrarMenuInicio();
     }
 
+    /**
+     * Muestra la pantalla del menú de inicio, reemplazando el
+     * contenido actual del layout raíz.
+     */
     public void mostrarMenuInicio() {
         VistaMenuInicio menuInicio = new VistaMenuInicio(this);
         rootLayout.getChildren().setAll(menuInicio.getLayout());
     }
 
+    /**
+     * Muestra la pantalla de creación de personaje, reemplazando el
+     * contenido actual del layout raíz.
+     */
     public void mostrarCreacionPersonaje() {
         VistaCreacionPersonaje creacionPersonaje = new VistaCreacionPersonaje(this);
         rootLayout.getChildren().setAll(creacionPersonaje.getLayout());
     }
 
+    /**
+     * Inicia una nueva partida con el jugador recién creado, reiniciando
+     * la progresión de salas desde la sala 1.
+     *
+     * @param jugadorCreado personaje jugador con el que se iniciará la partida.
+     */
     public void iniciarSimulacionDeJuego(Jugador jugadorCreado) {
         this.jugador = jugadorCreado;
         this.salaActual = 1;
         irASiguienteSala();
     }
 
+    /**
+     * Avanza a la siguiente sala de la progresión del juego. Si el
+     * jugador ha muerto, vuelve al menú de inicio. Al llegar a la sala
+     * 10 genera el combate contra el jefe final (Herobrine si el
+     * jugador es {@link Steve}, o el {@link Boss} genérico en caso
+     * contrario). Para las salas intermedias, decide aleatoriamente
+     * entre una sala de tesoro (40% de probabilidad) o una sala de
+     * combate contra una horda generada aleatoriamente.
+     */
     public void irASiguienteSala() {
         if (!jugador.estaVivo()) {
             System.out.println("El jugador ha muerto. Volviendo al menú...");
@@ -119,10 +165,22 @@ public class MenuPrincipal2 extends Application {
         salaActual++;
     }
 
+    /**
+     * Función identidad utilizada como envoltorio al insertar un nodo
+     * en el layout raíz (no transforma el nodo recibido).
+     *
+     * @param p nodo a devolver sin modificaciones.
+     * @return el mismo nodo recibido como parámetro.
+     */
     private javafx.scene.Parent pantSelf(javafx.scene.Parent p) {
         return p;
     }
 
+    /**
+     * Punto de entrada de la aplicación. Lanza la aplicación JavaFX.
+     *
+     * @param args argumentos de línea de comandos (no utilizados).
+     */
     public static void main(String[] args) {
         launch(args);
     }

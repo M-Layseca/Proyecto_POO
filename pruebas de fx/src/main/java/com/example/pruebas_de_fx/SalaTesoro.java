@@ -2,11 +2,27 @@ package com.example.pruebas_de_fx;
 
 import java.util.Random;
 
+/**
+ * Sala de tesoro. Al ingresar, otorga al jugador una recompensa
+ * aleatoria entre cuatro posibles (aumento de vida, ataque, frascos de
+ * Estus o usos de la habilidad pasiva).
+ */
 public class SalaTesoro extends Salas {
+
+    /**
+     * Crea una sala de tesoro con nombre y descripción fijos.
+     */
     public SalaTesoro() {
         super("Cofre Antiguo", "Un resplandor dorado ilumina esta habitación...");
     }
 
+    /**
+     * Otorga al jugador una recompensa aleatoria: aumento de vida
+     * máxima, aumento de ataque, frascos de Estus adicionales, o usos
+     * extra de la habilidad pasiva.
+     *
+     * @param jugador jugador que ingresa a la sala y recibe la recompensa.
+     */
     @Override
     public void entrar(Jugador jugador) {
         System.out.println("\n--- " + nombreSala + " ---");

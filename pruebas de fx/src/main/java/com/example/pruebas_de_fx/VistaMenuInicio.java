@@ -16,17 +16,40 @@ import javafx.util.Duration;
 
 import java.io.InputStream;
 
+/**
+ * Vista gráfica (JavaFX) del menú de inicio del juego. Muestra el
+ * título animado (efecto de parpadeo), un fondo animado en GIF y los
+ * botones para iniciar una nueva partida o salir de la aplicación.
+ */
 public class VistaMenuInicio {
+
+    /** Contenedor raíz de la vista (incluye el fondo animado). */
     private StackPane rootContainer;
+
+    /** Contenedor del contenido visible (título y botones). */
     private VBox layoutContenido;
+
+    /** Referencia al controlador principal, usado para navegar entre pantallas. */
     private MenuPrincipal2 orquestador;
+
+    /** Animación de parpadeo aplicada al título del menú. */
     private Timeline animacionParpadeo;
 
+    /**
+     * Construye la vista del menú de inicio y arma sus componentes gráficos.
+     *
+     * @param orquestador controlador principal usado para navegar a otras pantallas.
+     */
     public VistaMenuInicio(MenuPrincipal2 orquestador) {
         this.orquestador = orquestador;
         crearComponentes();
     }
 
+    /**
+     * Crea y ensambla todos los componentes gráficos del menú: fondo
+     * animado, título con efecto de parpadeo, y botones de "Nueva
+     * Partida" y "Salir".
+     */
     private void crearComponentes() {
         rootContainer = new StackPane();
         rootContainer.setStyle("-fx-background-color: #000000;");
@@ -88,12 +111,23 @@ public class VistaMenuInicio {
         rootContainer.getChildren().add(layoutContenido);
     }
 
+    /**
+     * Detiene la animación de parpadeo del título, si está activa.
+     * Debe llamarse antes de abandonar esta pantalla para evitar que
+     * la animación siga ejecutándose en segundo plano.
+     */
     public void detenerAnimacion() {
         if (animacionParpadeo != null) {
             animacionParpadeo.stop();
         }
     }
 
+    /**
+     * Obtiene el contenedor raíz de la vista, listo para insertarse en
+     * la escena de JavaFX.
+     *
+     * @return layout raíz de la vista.
+     */
     public StackPane getLayout() {
         return rootContainer;
     }

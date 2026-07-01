@@ -4,9 +4,23 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
+/**
+ * Gestor estático de música de fondo. Se encarga de cargar los
+ * archivos de audio desde el classpath, reproducirlos en bucle y
+ * detenerlos cuando corresponde.
+ */
 public class SoundManager {
+
+    /** Reproductor de música actualmente activo (compartido por toda la app). */
     private static MediaPlayer mediaPlayer;
 
+    /**
+     * Reproduce en bucle el archivo de música de fondo indicado,
+     * ubicado en el directorio de recursos {@code /music/}. Si ya hay
+     * una pista sonando, se detiene antes de iniciar la nueva.
+     *
+     * @param fileName nombre del archivo de música (dentro de {@code /music/}).
+     */
     public static void playBackgroundMusic(String fileName) {
         try {
             // Detener la música actual si hay una sonando
@@ -42,6 +56,9 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Detiene la reproducción de música actual, si existe.
+     */
     public static void stopMusic() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();

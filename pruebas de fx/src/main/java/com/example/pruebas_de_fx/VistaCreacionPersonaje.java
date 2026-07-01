@@ -9,15 +9,40 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import java.io.InputStream;
 
+/**
+ * Vista gráfica (JavaFX) de creación de personaje. Permite al jugador
+ * ingresar un nombre, elegir un arquetipo de clase y previsualizar su
+ * imagen antes de comenzar la aventura.
+ */
 public class VistaCreacionPersonaje {
+
+    /** Contenedor raíz de la vista. */
     private VBox layout;
+
+    /** Referencia al controlador principal, usado para navegar entre pantallas. */
     private MenuPrincipal2 orquestador;
+
+    /** Imagen de previsualización del personaje según la clase seleccionada. */
     private ImageView imgPersonaje;
+
+    /**
+     * Construye la vista de creación de personaje y arma sus
+     * componentes gráficos.
+     *
+     * @param orquestador controlador principal usado para navegar a otras pantallas.
+     */
     public VistaCreacionPersonaje(MenuPrincipal2 orquestador) {
         this.orquestador = orquestador;
         crearComponentes();
     }
 
+    /**
+     * Crea y ensambla todos los componentes gráficos de la pantalla:
+     * campo de nombre, selector de clase, previsualización de imagen y
+     * los botones de confirmar/volver. Al confirmar, instancia el
+     * {@link Jugador} concreto según la clase elegida e inicia la
+     * simulación de juego.
+     */
     private void crearComponentes() {
         layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
@@ -106,6 +131,12 @@ public class VistaCreacionPersonaje {
         );
     }
 
+    /**
+     * Actualiza la imagen de previsualización del personaje según la
+     * clase seleccionada, cargando el recurso gráfico correspondiente.
+     *
+     * @param clase nombre de la clase seleccionada ("MAGO", "TANK", "STEVE" o "GUERRERO").
+     */
     private void actualizarImagenPersonaje(String clase) {
         String rutaImagen = "";
 
@@ -139,6 +170,12 @@ public class VistaCreacionPersonaje {
         }
     }
 
+    /**
+     * Obtiene el contenedor raíz de la vista, listo para insertarse en
+     * la escena de JavaFX.
+     *
+     * @return layout raíz de la vista.
+     */
     public VBox getLayout() {
         return layout;
     }
