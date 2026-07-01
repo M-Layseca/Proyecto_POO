@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto ELO329 - Dark Souls: POO Edition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2.5em; }
+        .authors { margin: 15px 0 5px 0; font-style: italic; color: #bdc3c7; }
+        .date { font-weight: bold; color: #f1c40f; }
+        section {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 { color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+        h3 { color: #16a085; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        .formula {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2em;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .figure-box {
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: #f4f6f7;
+            border: 1px dashed #bdc3c7;
+            border-radius: 6px;
+        }
+        .figure-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .caption {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        a.repo-btn {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        a.repo-btn:hover { background-color: #219653; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Proyecto ELO329</h1>
+    <p class="authors">Diego Villanueva Moreno, Joaquín Torres, Martín Layseca, Eduardo Canales</p>
+    <p class="date">Junio 2026</p>
+</header>
+
+<section>
+    <h2>1. Descripción del Problema</h2>
+    <p>El estudio de la Programación Orientada a Objetos suele presentar una alta curva de dificultad debido a la abstracción de sus componentes pilares. Para nosotros, el desarrollo de este proyecto fue la clave para superar esta barrera y comprender a fondo el lenguaje Java. Al tener que implementar directamente las jerarquías de personajes, clases y habilidades, logramos visualizar de forma inmediata la ejecución de la arquitectura de software, consolidando nuestro propio aprendizaje técnico a través de la práctica pura.</p>
+</section>
+
+<section>
+    <h2>2. Análisis del Problema</h2>
+    <p>El problema se aborda modelando un ecosistema de software delimitado por la arquitectura del videojuego. Los entes principales que participan dentro del dominio del problema son las entidades lógicas abstractas (<code>Entidad</code>), subdivididas mediante herencia en personajes controlables (<code>Jugador</code>: <code>GUERRERO</code>, <code>MAGO</code>, <code>TANK</code>, <code>STEVE</code>) y amenazas automatizadas (<code>Enemigo</code>). Estos entes encapsulan estados (atributos como vida, ataque y recursos) y exponen comportamientos dinámicos polimórficos a través de un sistema de resolución de turnos y aplicación de hechizos (<code>Hechizos</code>).</p>
+    <p>El sistema se define como el motor lógico y gráfico cerrado que gestiona el ciclo de juego. Está compuesto por un subsistema de control de flujo (<code>MenuPrincipal2</code>), un componente generativo estocástico encargado de la progresión estructural (<code>Orquestador</code>) y un módulo de renderizado visual reactivo basado en eventos (<code>InterfazdeCombate</code>).</p>
+    <p>Las interacciones con el medio externo son de carácter periférico y de control: el sistema recibe estímulos asíncronos del usuario (entradas por teclado y ratón) para la toma de decisiones estratégicas, y en respuesta, altera el entorno externo mediante la actualización en tiempo real de la interfaz gráfica y la emisión de señales acústicas administradas por el hardware de audio (<code>SoundManager</code>).</p>
+</section>
+
+<section>
+    <h2>3. Definición de Requisitos</h2>
+    <p>A continuación, se presentan tres casos de uso esenciales que modelan el comportamiento esperado del sistema. Estos escenarios operan, a su vez, como la base estructural para las pruebas de validación y verificación del correcto desempeño del software.</p>
+
+    <h3>3.1 Caso 1: Creación de Personaje e Inicialización de Atributos</h3>
+    <ul>
+        <li><strong>Actores:</strong> Usuario.</li>
+        <li><strong>Descripción:</strong> El usuario interactúa con la interfaz gráfica para ingresar su nombre y seleccionar una clase de personaje (<code>GUERRERO</code>, <code>MAGO</code>, <code>TANK</code>, <code>STEVE</code>). El sistema debe instanciar la clase concreta correspondiente e inicializar correctamente los atributos heredados de <code>Entidad</code> (vida, ataque, defensa) según el balance de la clase.</li>
+        <li><strong>Uso como Test de Prueba:</strong> Se verifica mediante un test de aserción que, al seleccionar "MAGO", el objeto creado no sea nulo, su vida máxima sea exactamente 70, su inteligencia sea 20, y su <code>libroDeHechizos</code> contenga los 4 hechizos iniciales.</li>
+    </ul>
+
+    <h3>3.2 Caso 2: Procesamiento de Turno en Combate y Cálculo de Daño</h3>
+    <ul>
+        <li><strong>Actores:</strong> Usuario, Sistema.</li>
+        <li><strong>Descripción:</strong> Durante una batalla, el usuario selecciona un enemigo objetivo y ejecuta un comando de ataque físico o un hechizo. El sistema calcula la reducción de salud del objetivo aplicando la fórmula de mitigación por defensa.</li>
+    </ul>
+    <div class="formula">
+        daño-final = daño-recibido - defensa
+    </div>
+    <ul>
+        <li>Si la vida del enemigo se reduce a 0, se procesa su muerte y se otorga la experiencia correspondiente al jugador.</li>
+        <li><strong>Uso como Test de Prueba:</strong> Se valida aislando la lógica de <code>Batalla.java</code>. Un test introduce un <code>Jugador</code> con ataque 40 y un enemigo <code>Hollow</code> con 30 de vida y 2 de defensa. Tras el turno, se comprueba que el daño final sea exactamente 38, que la salud del enemigo quede en 0 y que se gatille el método <code>ganarExp()</code>.</li>
+    </ul>
+
+    <h3>3.3 Caso de Uso 3: Gestión Estocástica de Salas y Transición de Estados</h3>
+    <ul>
+        <li><strong>Actores:</strong> Sistema.</li>
+        <li><strong>Descripción:</strong> Al derrotar a los enemigos de una habitación o interactuar con un cofre, el usuario solicita avanzar. El <code>Orquestador</code> o el flujo de <code>MenuPrincipal2</code> genera de manera aleatoria el tipo de la siguiente sala (<code>Combate</code> o <code>SalaTesoro</code>). Si es tesoro, altera los atributos del jugador (ej. incrementar frascos de estus); si es combate, instancia una nueva horda.</li>
+        <li><strong>Uso como Test de Prueba:</strong> Se simula la transición de salas secuenciales para verificar que el ciclo de juego no sufra desbordamientos (<em>stack overflow</em>), que la música de fondo mute correctamente a través del <code>SoundManager</code> según el contexto (<code>battle_theme.mp3</code> o <code>treasure_theme.mp3</code>) y que el contador <code>salaActual</code> se incremente consistentemente en +1.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>4. Diseño</h2>
+    <h3>4.1 Diagrama del sistema</h3>
+    <div class="figure-box">
+        <!-- Reemplaza "ruta/diagrama_clases.png" por el nombre de tu archivo de imagen -->
+        <img src="img/diagrama_clases.png" alt="Diagrama de clases">
+        <div class="caption">Figure 1: Diagrama de clases</div>
+    </div>
+
+    <h3>4.2 Diagrama de un Caso de Uso</h3>
+    <div class="figure-box">
+        <!-- Reemplaza "ruta/diagrama_secuencia.png" por tu imagen -->
+        <img src="img/diagrama_secuencia.png" alt="Diagrama de secuencia">
+        <div class="caption">Figure 2: Diagrama de secuencia del procesamiento del turno de combate</div>
+    </div>
+</section>
+
+<section>
+    <h2>5. Pruebas</h2>
+    <h3>5.1 CASO 1</h3>
+    <div class="figure-box">
+        <img src="img/creacion_personaje.png" alt="Creación del personaje">
+        <div class="caption">Figure 3: Creación del personaje</div>
+    </div>
+    <div class="figure-box">
+        <img src="img/personaje_creado.png" alt="Personaje Creado">
+        <div class="caption">Figure 4: Personaje Creado</div>
+    </div>
+    <p>En estas imágenes se logra apreciar cómo se resolvió el caso uno usando específicamente el caso de prueba mencionado, además se logra apreciar la correcta asignación de vida y las habilidades que tiene la clase en específico.</p>
+    <p><strong>Dificultades:</strong> Se puede mencionar el problema que hubo en que la clase fuera representada por su imagen correspondiente, además de que se escuchara la música de fondo en este menú. Lo solucionamos cambiando el cómo trabajamos la ruta de los recursos de imagen y música, haciendo que la lectura de estos se lograra cumplir.</p>
+
+    <h3>5.2 CASO 2</h3>
+    <div class="figure-box">
+        <img src="img/combate.png" alt="Interfaz de Combate">
+        <div class="caption">Figure 5: Interfaz de Combate</div>
+    </div>
+    <p>En esta imagen se logra ver el combate que se ejecuta en nuestro juego, lo cual como se dijo en el caso se calcula usando la fórmula de <code>daño final = daño recibido - defensa</code>, siendo así como recibe el daño.</p>
+    <p><strong>Dificultades:</strong> Algunos de los problemas que tuvimos fueron que las imágenes del jugador y de los enemigos no cargaban en la zona de combate, además de que se tuvo problemas en el manejo de la barra de experiencia y en cómo se le restaba vida al jugador. Estos se resolvieron primeramente cambiando el cómo llamábamos las imágenes a la zona de combate; para la barra de experiencia se cambió el manejo de las variables de las clases para que se pudieran ir compartiendo de manera correcta, y para la vida del jugador se cambió la forma en cómo se calculaba por cada turno de combate.</p>
+</section>
+
+<section style="text-align: center;">
+    <h2>6. Link Repositorio</h2>
+    <!-- Agrega aquí el enlace real a tu repositorio de GitHub -->
+    <a href="#" class="repo-btn">Ir al Repositorio del Proyecto</a>
+</section>
+
+</body>
+</html>
