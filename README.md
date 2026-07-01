@@ -16,6 +16,7 @@ Al iniciar la aventura, puedes elegir entre tres clases principales:
 1. **GUERRERO:** Especialista en combate cuerpo a cuerpo. Posee un gran daño base y su pasiva le permite entrar en estado *Berserker*.
 2. **MAGO:** Débil físicamente, pero con un repertorio de hechizos devastadores que consumen Maná.
 3. **TANK:** Inmune al dolor. Su defensa es impenetrable, ideal para resistir combates largos.
+4. **STEVE:** Creativo y con un posible gran arsenal que consigue armar con su entorno
 
 
 ## 👹 Bestiario
